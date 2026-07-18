@@ -1,21 +1,15 @@
 from fastapi import FastAPI
 
+from app.api.routes.root import router as root_router
+from app.api.routes.health import router as health_router
+
+from app.core.config import settings
+
 app = FastAPI(
-    title="Narra API",
-    version="1.0.0",
-    description="Backend API for the Narra premium resale marketplace.",
+    title=settings.APP_NAME,
+    version=settings.APP_VERSION,
+    description=settings.APP_DESCRIPTION,
 )
 
-
-@app.get("/")
-def root():
-    return {
-        "message": "Welcome to Narra API 🚀"
-    }
-
-
-@app.get("/health")
-def health_check():
-    return {
-        "status": "healthy"
-    }
+app.include_router(root_router)
+app.include_router(health_router)
