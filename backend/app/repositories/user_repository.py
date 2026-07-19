@@ -1,19 +1,15 @@
 from sqlalchemy.orm import Session
 
 from app.models.user import User
-from app.schemas.user import UserCreate
 
 
 class UserRepository:
-    def create(self, db: Session, user: UserCreate) -> User:
-        db_user = User(
-            name=user.name,
-            email=user.email,
-            password=user.password,
-        )
-
-        db.add(db_user)
+    def create(self, db: Session, user: User) -> User:
+        db.add(user)
         db.commit()
-        db.refresh(db_user)
+        db.refresh(user)
 
-        return db_user
+        return user
+    
+    def get_by_email(self, db: Session, email: str) -> User | None:
+        return db.query(User).filter(User.email == email).first()
