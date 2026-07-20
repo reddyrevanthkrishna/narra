@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     APP_NAME: str
     APP_VERSION: str
     APP_DESCRIPTION: str
+    DEBUG: bool = False
 
     # Database Settings
     DATABASE_URL: str

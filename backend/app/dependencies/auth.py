@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError
@@ -23,7 +25,7 @@ def get_current_user(
 
     try:
         payload = verify_token(token)
-        user_id = int(payload["sub"])
+        user_id = UUID(payload["sub"])
     except (JWTError, ValueError):
         raise credentials_exception
 
