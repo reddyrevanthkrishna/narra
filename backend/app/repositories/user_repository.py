@@ -1,37 +1,22 @@
-from uuid import UUID
-
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models.user import User
+from app.repositories.base_repository import BaseRepository
 
 
-class UserRepository:
-    def create(
-        self,
-        db: Session,
-        user: User,
-    ) -> User:
-        db.add(user)
-        return user
+class UserRepository(BaseRepository[User]):
+    def __init__(self):
+        super().__init__(User)
 
     def get_by_email(
         self,
         db: Session,
         email: str,
     ) -> User | None:
-        return (
-            db.query(User)
-            .filter(User.email == email)
-            .first()
+        statement = (
+            select(User)
+            .where(User.email == email)
         )
 
-    def get_by_id(
-        self,
-        db: Session,
-        user_id: UUID,
-    ) -> User | None:
-        return (
-            db.query(User)
-            .filter(User.id == user_id)
-            .first()
-        )
+        return db.scalar(statement)
