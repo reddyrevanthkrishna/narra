@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.repositories.base_repository import BaseRepository
 
+
 ModelType = TypeVar("ModelType")
 
 
@@ -52,6 +53,7 @@ class BaseService(Generic[ModelType]):
         self,
         db: Session,
         entity: ModelType,
-    ) -> None:
+) -> ModelType:
         db.commit()
         db.refresh(entity)
+        return entity

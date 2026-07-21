@@ -7,9 +7,12 @@ from app.schemas.brand import BrandCreate, BrandUpdate
 from app.services.base_service import BaseService
 
 
-class BrandService(BaseService):
+class BrandService(BaseService[Brand]):
     def __init__(self):
-        self.repository = BrandRepository()
+        super().__init__(
+            repository=BrandRepository(),
+            entity_name="Brand",
+        )
 
     def create(
         self,
@@ -21,12 +24,17 @@ class BrandService(BaseService):
         if not data.get("slug"):
             data["slug"] = slugify(data["name"])
 
-        brand = self.repository.create(
+        brand = Brand(**data)
+
+        self.repository.create(
             db=db,
-            obj_in=data,
+            entity=brand,
         )
 
-        return self.commit_and_refresh(db, brand)
+        return self.commit_and_refresh(
+            db=db,
+            entity=brand,
+        )
 
     def update(
         self,
@@ -39,13 +47,15 @@ class BrandService(BaseService):
         if "name" in data and "slug" not in data:
             data["slug"] = slugify(data["name"])
 
-        brand = self.repository.update(
-            db=db,
-            db_obj=brand,
-            obj_in=data,
+        self.repository.update(
+            entity=brand,
+            **data,
         )
 
-        return self.commit_and_refresh(db, brand)
+        return self.commit_and_refresh(
+            db=db,
+            entity=brand,
+        )
 
     def get_by_slug(
         self,

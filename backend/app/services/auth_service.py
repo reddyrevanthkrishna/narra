@@ -1,8 +1,9 @@
 from fastapi import HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from app.repositories.user_repository import UserRepository
-from app.schemas.auth import LoginRequest, LoginResponse
+from app.schemas.auth import LoginResponse
 from app.schemas.user import UserResponse
 from app.security.jwt import create_access_token
 from app.security.password import verify_password
@@ -15,11 +16,11 @@ class AuthService:
     def authenticate_user(
         self,
         db: Session,
-        login: LoginRequest,
+        form_data: OAuth2PasswordRequestForm,
     ) -> LoginResponse:
         user = self.repository.get_by_email(
             db,
-            login.email,
+            form_data.username,
         )
 
         if user is None:
@@ -29,7 +30,7 @@ class AuthService:
             )
 
         if not verify_password(
-            login.password,
+            form_data.password,
             user.password_hash,
         ):
             raise HTTPException(
