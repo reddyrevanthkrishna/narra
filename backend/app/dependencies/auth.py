@@ -10,7 +10,9 @@ from app.models.user import User
 from app.repositories.user_repository import UserRepository
 from app.security.jwt import verify_token
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="/auth/login",
+)
 
 
 def get_current_user(

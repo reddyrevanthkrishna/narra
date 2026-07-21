@@ -1,10 +1,8 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from uuid import UUID
 
-from sqlalchemy import Boolean, ForeignKey, Integer, String, Text, true
-from sqlalchemy.dialects.postgresql import UUID as PGUUID
+from sqlalchemy import Boolean, Integer, String, Text, true
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.constants import (
@@ -18,14 +16,8 @@ if TYPE_CHECKING:
     from app.models.product import Product
 
 
-class Category(BaseEntity):
-    __tablename__ = "categories"
-
-    parent_id: Mapped[UUID | None] = mapped_column(
-        PGUUID(as_uuid=True),
-        ForeignKey("categories.id", ondelete="SET NULL"),
-        nullable=True,
-    )
+class Brand(BaseEntity):
+    __tablename__ = "brands"
 
     name: Mapped[str] = mapped_column(
         String(NAME_MAX_LENGTH),
@@ -44,12 +36,12 @@ class Category(BaseEntity):
         nullable=True,
     )
 
-    image_key: Mapped[str | None] = mapped_column(
+    logo_key: Mapped[str | None] = mapped_column(
         String(IMAGE_KEY_MAX_LENGTH),
         nullable=True,
     )
 
-    sort_order: Mapped[int] = mapped_column(
+    display_order: Mapped[int] = mapped_column(
         Integer,
         default=0,
         server_default="0",
@@ -63,17 +55,6 @@ class Category(BaseEntity):
         nullable=False,
     )
 
-    parent: Mapped["Category | None"] = relationship(
-        "Category",
-        remote_side="Category.id",
-        back_populates="children",
-    )
-
-    children: Mapped[list["Category"]] = relationship(
-        "Category",
-        back_populates="parent",
-    )
-
     products: Mapped[list["Product"]] = relationship(
-        back_populates="category",
+        back_populates="brand",
     )
