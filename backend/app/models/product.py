@@ -31,6 +31,7 @@ from app.enums.product import ProductStatus
 if TYPE_CHECKING:
     from app.models.brand import Brand
     from app.models.category import Category
+    from app.models.variant_type import VariantType
 
 
 class Product(BaseEntity):
@@ -47,6 +48,13 @@ class Product(BaseEntity):
         PGUUID(as_uuid=True),
         ForeignKey("brands.id"),
         nullable=False,
+        index=True,
+    )
+
+    variant_type_id: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        ForeignKey("variant_types.id"),
+        nullable=True,
         index=True,
     )
 
@@ -115,5 +123,9 @@ class Product(BaseEntity):
     )
 
     brand: Mapped["Brand"] = relationship(
+        back_populates="products",
+    )
+
+    variant_type: Mapped["VariantType | None"] = relationship(
         back_populates="products",
     )

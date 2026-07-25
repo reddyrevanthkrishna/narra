@@ -18,6 +18,7 @@ from app.enums.product import ProductStatus
 class ProductBase(BaseModel):
     category_id: UUID
     brand_id: UUID
+    variant_type_id: UUID | None = None
 
     name: str = Field(
         min_length=1,
@@ -65,6 +66,7 @@ class ProductCreate(ProductBase):
 class ProductUpdate(BaseModel):
     category_id: UUID | None = None
     brand_id: UUID | None = None
+    variant_type_id: UUID | None = None
 
     name: str | None = Field(
         default=None,

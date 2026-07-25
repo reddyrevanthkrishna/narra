@@ -10,6 +10,8 @@ from app.db.entity import BaseEntity
 from app.enums import UserRole
 
 if TYPE_CHECKING:
+    from app.models.seller import Seller
+    from app.models.seller_application import SellerApplication
     from app.models.user_profile import UserProfile
 
 
@@ -55,4 +57,16 @@ class User(BaseEntity):
         back_populates="user",
         uselist=False,
         cascade="all, delete-orphan",
+    )
+
+    seller: Mapped["Seller | None"] = relationship(
+        back_populates="user",
+        uselist=False,
+    )
+
+    seller_applications: Mapped[list["SellerApplication"]] = relationship(
+        back_populates="user",
+        foreign_keys="SellerApplication.user_id",
+        cascade="all, delete-orphan",
+        order_by="SellerApplication.created_at.desc()",
     )
