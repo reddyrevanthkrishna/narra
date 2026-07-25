@@ -1,12 +1,12 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class ShipmentStatus(str, Enum):
+class ShipmentStatus(StrEnum):
     PENDING = "PENDING"
     READY_TO_SHIP = "READY_TO_SHIP"
     SHIPPED = "SHIPPED"
     IN_TRANSIT = "IN_TRANSIT"
     OUT_FOR_DELIVERY = "OUT_FOR_DELIVERY"
     DELIVERED = "DELIVERED"
-    FAILED = "FAILED"
+    DELIVERY_FAILED = "DELIVERY_FAILED"
     RETURNED = "RETURNED"

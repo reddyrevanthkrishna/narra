@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class PayoutStatus(str, Enum):
+class PayoutStatus(StrEnum):
     PENDING = "PENDING"
     HOLD = "HOLD"
     PROCESSING = "PROCESSING"

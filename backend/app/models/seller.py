@@ -16,6 +16,7 @@ from app.enums.seller_type import SellerType
 if TYPE_CHECKING:
     from app.models.listing import Listing
     from app.models.seller_application import SellerApplication
+    from app.models.seller_order import SellerOrder
     from app.models.user import User
 
 
@@ -115,4 +116,9 @@ class Seller(BaseEntity):
     listings: Mapped[list["Listing"]] = relationship(
         back_populates="seller",
         cascade="all, delete-orphan",
+    )
+
+    seller_orders: Mapped[list["SellerOrder"]] = relationship(
+        back_populates="seller",
+        order_by="SellerOrder.created_at.desc()",
     )

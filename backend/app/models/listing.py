@@ -13,6 +13,7 @@ from app.db.types import enum_column
 from app.enums.listing import ListingStatus
 
 if TYPE_CHECKING:
+    from app.models.order_item import OrderItem
     from app.models.product import Product
     from app.models.seller import Seller
     from app.models.variant_option import VariantOption
@@ -47,7 +48,7 @@ class Listing(BaseEntity):
     )
 
     price: Mapped[Decimal] = mapped_column(
-        Numeric(10, 2),
+        Numeric(12, 2),
         nullable=False,
         index=True,
     )
@@ -79,4 +80,8 @@ class Listing(BaseEntity):
 
     variant_option: Mapped["VariantOption"] = relationship(
         back_populates="listings",
+    )
+
+    order_items: Mapped[list["OrderItem"]] = relationship(
+        back_populates="listing",
     )

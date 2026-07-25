@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class PurchaseSource(str, Enum):
+class PurchaseSource(StrEnum):
     LISTING = "LISTING"
     OFFER = "OFFER"
     AUCTION = "AUCTION"

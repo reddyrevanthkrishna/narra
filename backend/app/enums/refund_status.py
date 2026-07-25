@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class RefundStatus(str, Enum):
+class RefundStatus(StrEnum):
     PENDING = "PENDING"
     APPROVED = "APPROVED"
     REJECTED = "REJECTED"
