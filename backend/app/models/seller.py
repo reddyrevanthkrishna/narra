@@ -14,6 +14,7 @@ from app.enums.seller_status import SellerStatus
 from app.enums.seller_type import SellerType
 
 if TYPE_CHECKING:
+    from app.models.listing import Listing
     from app.models.seller_application import SellerApplication
     from app.models.user import User
 
@@ -109,4 +110,9 @@ class Seller(BaseEntity):
 
     application: Mapped["SellerApplication | None"] = relationship(
         foreign_keys=[application_id],
+    )
+
+    listings: Mapped[list["Listing"]] = relationship(
+        back_populates="seller",
+        cascade="all, delete-orphan",
     )

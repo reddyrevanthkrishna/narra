@@ -57,7 +57,7 @@ def get_product(
 ):
     product = service.get_by_id(
         db=db,
-        obj_id=product_id,
+        entity_id=product_id,
     )
 
     if product is None:
@@ -81,7 +81,7 @@ def update_product(
 ):
     product = service.get_by_id(
         db=db,
-        obj_id=product_id,
+        entity_id=product_id,
     )
 
     if product is None:
@@ -108,7 +108,7 @@ def delete_product(
 ):
     product = service.get_by_id(
         db=db,
-        obj_id=product_id,
+        entity_id=product_id,
     )
 
     if product is None:
@@ -118,8 +118,7 @@ def delete_product(
         )
 
     service.repository.soft_delete(
-        db=db,
-        db_obj=product,
+        entity=product,
     )
 
     db.commit()

@@ -1,5 +1,6 @@
 from app.models.brand import Brand
 from app.models.category import Category
+from app.models.listing import Listing
 from app.models.product import Product
 from app.models.seller import Seller
 from app.models.seller_application import SellerApplication
@@ -11,6 +12,7 @@ from app.models.variant_type import VariantType
 __all__ = [
     "Brand",
     "Category",
+    "Listing",
     "Product",
     "Seller",
     "SellerApplication",

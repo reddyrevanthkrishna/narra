@@ -31,6 +31,7 @@ from app.enums.product import ProductStatus
 if TYPE_CHECKING:
     from app.models.brand import Brand
     from app.models.category import Category
+    from app.models.listing import Listing
     from app.models.variant_type import VariantType
 
 
@@ -128,4 +129,9 @@ class Product(BaseEntity):
 
     variant_type: Mapped["VariantType | None"] = relationship(
         back_populates="products",
+    )
+
+    listings: Mapped[list["Listing"]] = relationship(
+        back_populates="product",
+        cascade="all, delete-orphan",
     )

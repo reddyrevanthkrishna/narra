@@ -13,6 +13,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.entity import BaseEntity
 
 if TYPE_CHECKING:
+    from app.models.listing import Listing
     from app.models.variant_type import VariantType
 
 
@@ -62,4 +63,9 @@ class VariantOption(BaseEntity):
 
     variant_type: Mapped["VariantType"] = relationship(
         back_populates="variant_options",
+    )
+
+    listings: Mapped[list["Listing"]] = relationship(
+        back_populates="variant_option",
+        cascade="all, delete-orphan",
     )

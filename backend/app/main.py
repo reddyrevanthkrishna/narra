@@ -6,6 +6,7 @@ from app.api.routes.users import router as users_router
 from app.api.routes.product import router as product_router
 from app.api.routes.variant_type import router as variant_type_router
 from app.api.routes.variant_option import router as variant_option_router
+from app.api.routes.listing import router as listing_router
 from app.api.routes.seller_application import (
     router as seller_application_router,
 )
@@ -34,6 +35,7 @@ app.include_router(product_router)
 # Marketplace
 app.include_router(variant_type_router)
 app.include_router(variant_option_router)
+app.include_router(listing_router)
 
 # Seller
 app.include_router(seller_application_router)
