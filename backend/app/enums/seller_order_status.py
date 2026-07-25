@@ -1,0 +1,11 @@
+from enum import Enum
+
+
+class SellerOrderStatus(str, Enum):
+    PENDING_PAYMENT = "PENDING_PAYMENT"
+    PAID = "PAID"
+    PROCESSING = "PROCESSING"
+    SHIPPED = "SHIPPED"
+    DELIVERED = "DELIVERED"
+    CANCELLED = "CANCELLED"
+    REFUNDED = "REFUNDED"
