@@ -28,8 +28,10 @@ class Payout(BaseEntity):
         index=True,
     )
 
-    status: Mapped[PayoutStatus] = enum_column(
-        PayoutStatus,
+    status: Mapped[PayoutStatus] = mapped_column(
+        enum_column(
+            PayoutStatus,
+        ),
         nullable=False,
         default=PayoutStatus.PENDING,
         index=True,

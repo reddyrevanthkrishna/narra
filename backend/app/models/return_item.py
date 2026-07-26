@@ -38,8 +38,10 @@ class ReturnItem(BaseEntity):
         nullable=False,
     )
 
-    reason: Mapped[ReturnReason] = enum_column(
-        ReturnReason,
+    reason: Mapped[ReturnReason] = mapped_column(
+        enum_column(
+            ReturnReason,
+        ),
         nullable=False,
         index=True,
     )

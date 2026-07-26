@@ -29,21 +29,27 @@ class Payment(BaseEntity):
         index=True,
     )
 
-    status: Mapped[PaymentStatus] = enum_column(
-        PaymentStatus,
+    status: Mapped[PaymentStatus] = mapped_column(
+        enum_column(
+            PaymentStatus,
+        ),
         nullable=False,
         default=PaymentStatus.PENDING,
         index=True,
     )
 
-    gateway: Mapped[PaymentGateway] = enum_column(
-        PaymentGateway,
+    gateway: Mapped[PaymentGateway] = mapped_column(
+        enum_column(
+            PaymentGateway,
+        ),
         nullable=False,
         default=PaymentGateway.RAZORPAY,
     )
 
-    payment_method: Mapped[PaymentMethod | None] = enum_column(
-        PaymentMethod,
+    payment_method: Mapped[PaymentMethod | None] = mapped_column(
+        enum_column(
+            PaymentMethod,
+        ),
         nullable=True,
     )
 

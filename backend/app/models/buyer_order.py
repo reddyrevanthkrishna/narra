@@ -37,8 +37,10 @@ class BuyerOrder(BaseEntity):
         index=True,
     )
 
-    status: Mapped[OrderStatus] = enum_column(
-        OrderStatus,
+    status: Mapped[OrderStatus] = mapped_column(
+        enum_column(
+            OrderStatus,
+        ),
         nullable=False,
         default=OrderStatus.PENDING_PAYMENT,
         index=True,

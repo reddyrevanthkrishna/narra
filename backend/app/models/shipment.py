@@ -27,8 +27,10 @@ class Shipment(BaseEntity):
         index=True,
     )
 
-    status: Mapped[ShipmentStatus] = enum_column(
-        ShipmentStatus,
+    status: Mapped[ShipmentStatus] = mapped_column(
+        enum_column(
+            ShipmentStatus,
+        ),
         nullable=False,
         default=ShipmentStatus.PENDING,
         index=True,

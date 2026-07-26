@@ -29,8 +29,10 @@ class Refund(BaseEntity):
         index=True,
     )
 
-    status: Mapped[RefundStatus] = enum_column(
-        RefundStatus,
+    status: Mapped[RefundStatus] = mapped_column(
+        enum_column(
+            RefundStatus,
+        ),
         nullable=False,
         default=RefundStatus.PENDING,
         index=True,
@@ -41,8 +43,10 @@ class Refund(BaseEntity):
         nullable=False,
     )
 
-    reason: Mapped[RefundReason] = enum_column(
-        RefundReason,
+    reason: Mapped[RefundReason] = mapped_column(
+        enum_column(
+            RefundReason,
+        ),
         nullable=False,
         index=True,
     )

@@ -30,8 +30,10 @@ class ReturnRequest(BaseEntity):
         index=True,
     )
 
-    status: Mapped[ReturnStatus] = enum_column(
-        ReturnStatus,
+    status: Mapped[ReturnStatus] = mapped_column(
+        enum_column(
+            ReturnStatus,
+        ),
         nullable=False,
         default=ReturnStatus.REQUESTED,
         index=True,

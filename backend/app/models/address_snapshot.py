@@ -41,8 +41,10 @@ class AddressSnapshot(BaseEntity):
         nullable=False,
     )
 
-    address_type: Mapped[AddressType | None] = enum_column(
-        AddressType,
+    address_type: Mapped[AddressType | None] = mapped_column(
+        enum_column(
+            AddressType,
+        ),
         nullable=True,
     )
 
