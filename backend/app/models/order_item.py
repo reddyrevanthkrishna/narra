@@ -14,6 +14,7 @@ from app.enums import PurchaseSource
 
 if TYPE_CHECKING:
     from app.models.listing import Listing
+    from app.models.return_item import ReturnItem
     from app.models.seller_order import SellerOrder
 
 
@@ -68,6 +69,11 @@ class OrderItem(BaseEntity):
         nullable=False,
     )
 
+    sku: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+    )
+
     thumbnail: Mapped[str] = mapped_column(
         String(500),
         nullable=False,
@@ -117,4 +123,11 @@ class OrderItem(BaseEntity):
         back_populates="order_items",
     )
 
-    listing: Mapped["Listing"] = relationship()
+    listing: Mapped["Listing"] = relationship(
+        back_populates="order_items",
+    )
+
+    return_item: Mapped["ReturnItem | None"] = relationship(
+        back_populates="order_item",
+        uselist=False,
+    )

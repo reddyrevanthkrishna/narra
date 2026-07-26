@@ -8,6 +8,8 @@ from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.entity import BaseEntity
+from app.db.types import enum_column
+from app.enums import AddressType
 
 if TYPE_CHECKING:
     from app.models.buyer_order import BuyerOrder
@@ -37,6 +39,11 @@ class AddressSnapshot(BaseEntity):
     phone: Mapped[str] = mapped_column(
         String(20),
         nullable=False,
+    )
+
+    address_type: Mapped[AddressType | None] = enum_column(
+        AddressType,
+        nullable=True,
     )
 
     company_name: Mapped[str | None] = mapped_column(

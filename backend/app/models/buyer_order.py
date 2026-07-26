@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime
 from decimal import Decimal
 from typing import TYPE_CHECKING
 from uuid import UUID
@@ -36,13 +37,10 @@ class BuyerOrder(BaseEntity):
         index=True,
     )
 
-    status: Mapped[OrderStatus] = mapped_column(
-        enum_column(
-            OrderStatus,
-            name="orderstatus",
-        ),
-        default=OrderStatus.PENDING_PAYMENT,
+    status: Mapped[OrderStatus] = enum_column(
+        OrderStatus,
         nullable=False,
+        default=OrderStatus.PENDING_PAYMENT,
         index=True,
     )
 
@@ -63,13 +61,31 @@ class BuyerOrder(BaseEntity):
         default=0,
     )
 
-    tax: Mapped[Decimal] = mapped_column(
+    shipping_discount: Mapped[Decimal] = mapped_column(
         Numeric(12, 2),
         nullable=False,
         default=0,
     )
 
-    discount: Mapped[Decimal] = mapped_column(
+    seller_discount: Mapped[Decimal] = mapped_column(
+        Numeric(12, 2),
+        nullable=False,
+        default=0,
+    )
+
+    platform_fee: Mapped[Decimal] = mapped_column(
+        Numeric(12, 2),
+        nullable=False,
+        default=0,
+    )
+
+    platform_discount: Mapped[Decimal] = mapped_column(
+        Numeric(12, 2),
+        nullable=False,
+        default=0,
+    )
+
+    tax: Mapped[Decimal] = mapped_column(
         Numeric(12, 2),
         nullable=False,
         default=0,
@@ -78,6 +94,10 @@ class BuyerOrder(BaseEntity):
     grand_total: Mapped[Decimal] = mapped_column(
         Numeric(12, 2),
         nullable=False,
+    )
+
+    ordered_at: Mapped[datetime | None] = mapped_column(
+        nullable=True,
     )
 
     buyer: Mapped["User"] = relationship(
@@ -95,7 +115,7 @@ class BuyerOrder(BaseEntity):
         cascade="all, delete-orphan",
     )
 
-    payment: Mapped["Payment"] = relationship(
+    payment: Mapped["Payment | None"] = relationship(
         back_populates="buyer_order",
         uselist=False,
         cascade="all, delete-orphan",

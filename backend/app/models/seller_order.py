@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime
 from decimal import Decimal
 from typing import TYPE_CHECKING
 from uuid import UUID
@@ -16,8 +17,7 @@ if TYPE_CHECKING:
     from app.models.buyer_order import BuyerOrder
     from app.models.order_item import OrderItem
     from app.models.payout import Payout
-    from app.models.refund import Refund
-    from app.models.return import Return
+    from app.models.return_request import ReturnRequest
     from app.models.seller import Seller
     from app.models.shipment import Shipment
 
@@ -39,13 +39,10 @@ class SellerOrder(BaseEntity):
         index=True,
     )
 
-    status: Mapped[SellerOrderStatus] = mapped_column(
-        enum_column(
-            SellerOrderStatus,
-            name="sellerorderstatus",
-        ),
-        default=SellerOrderStatus.PENDING_PAYMENT,
+    status: Mapped[SellerOrderStatus] = enum_column(
+        SellerOrderStatus,
         nullable=False,
+        default=SellerOrderStatus.PENDING,
         index=True,
     )
 
@@ -54,7 +51,19 @@ class SellerOrder(BaseEntity):
         nullable=False,
     )
 
+    seller_discount: Mapped[Decimal] = mapped_column(
+        Numeric(12, 2),
+        nullable=False,
+        default=0,
+    )
+
     shipping_fee: Mapped[Decimal] = mapped_column(
+        Numeric(12, 2),
+        nullable=False,
+        default=0,
+    )
+
+    platform_fee: Mapped[Decimal] = mapped_column(
         Numeric(12, 2),
         nullable=False,
         default=0,
@@ -66,14 +75,12 @@ class SellerOrder(BaseEntity):
         default=0,
     )
 
-    discount: Mapped[Decimal] = mapped_column(
-        Numeric(12, 2),
-        nullable=False,
-        default=0,
-    )
-
     total: Mapped[Decimal] = mapped_column(
         Numeric(12, 2),
+        nullable=False,
+    )
+
+    ordered_at: Mapped[datetime] = mapped_column(
         nullable=False,
     )
 
@@ -90,25 +97,19 @@ class SellerOrder(BaseEntity):
         cascade="all, delete-orphan",
     )
 
-    shipment: Mapped["Shipment"] = relationship(
+    shipment: Mapped["Shipment | None"] = relationship(
         back_populates="seller_order",
         uselist=False,
         cascade="all, delete-orphan",
     )
 
-    return_request: Mapped["Return"] = relationship(
+    return_request: Mapped["ReturnRequest | None"] = relationship(
         back_populates="seller_order",
         uselist=False,
         cascade="all, delete-orphan",
     )
 
-    refund: Mapped["Refund"] = relationship(
-        back_populates="seller_order",
-        uselist=False,
-        cascade="all, delete-orphan",
-    )
-
-    payout: Mapped["Payout"] = relationship(
+    payout: Mapped["Payout | None"] = relationship(
         back_populates="seller_order",
         uselist=False,
         cascade="all, delete-orphan",

@@ -1,0 +1,12 @@
+from enum import StrEnum
+
+
+class ReturnReason(StrEnum):
+    DAMAGED = "DAMAGED"
+    DEFECTIVE = "DEFECTIVE"
+    WRONG_ITEM = "WRONG_ITEM"
+    WRONG_SIZE = "WRONG_SIZE"
+    NOT_AS_DESCRIBED = "NOT_AS_DESCRIBED"
+    QUALITY_ISSUE = "QUALITY_ISSUE"
+    CHANGED_MIND = "CHANGED_MIND"
+    OTHER = "OTHER"

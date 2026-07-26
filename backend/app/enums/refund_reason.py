@@ -1,0 +1,9 @@
+from enum import StrEnum
+
+
+class RefundReason(StrEnum):
+    RETURN_APPROVED = "RETURN_APPROVED"
+    ORDER_CANCELLATION = "ORDER_CANCELLATION"
+    PAYMENT_FAILURE = "PAYMENT_FAILURE"
+    GOODWILL = "GOODWILL"
+    OTHER = "OTHER"
