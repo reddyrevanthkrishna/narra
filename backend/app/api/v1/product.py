@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
@@ -55,18 +55,10 @@ def get_product(
     product_id: UUID,
     db: Session = Depends(get_db),
 ):
-    product = service.get_by_id(
+    return service.get_by_id(
         db=db,
         entity_id=product_id,
     )
-
-    if product is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Product not found.",
-        )
-
-    return product
 
 
 @router.put(
@@ -84,12 +76,6 @@ def update_product(
         entity_id=product_id,
     )
 
-    if product is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Product not found.",
-        )
-
     return service.update(
         db=db,
         product=product,
@@ -106,19 +92,7 @@ def delete_product(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    product = service.get_by_id(
+    service.soft_delete(
         db=db,
-        entity_id=product_id,
+        product_id=product_id,
     )
-
-    if product is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Product not found.",
-        )
-
-    service.repository.soft_delete(
-        entity=product,
-    )
-
-    db.commit()

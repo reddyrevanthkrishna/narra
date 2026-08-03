@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
@@ -34,16 +34,10 @@ def create_variant_option(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    variant_type = variant_type_service.get_by_id(
+    variant_type_service.get_by_id(
         db=db,
-        obj_id=variant_type_id,
+        entity_id=variant_type_id,
     )
-
-    if variant_type is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Variant type not found.",
-        )
 
     return service.create(
         db=db,
@@ -60,16 +54,10 @@ def list_variant_options(
     variant_type_id: UUID,
     db: Session = Depends(get_db),
 ):
-    variant_type = variant_type_service.get_by_id(
+    variant_type_service.get_by_id(
         db=db,
-        obj_id=variant_type_id,
+        entity_id=variant_type_id,
     )
-
-    if variant_type is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Variant type not found.",
-        )
 
     return service.list_by_variant_type(
         db=db,
@@ -88,10 +76,12 @@ def get_variant_option(
 ):
     option = service.get_by_id(
         db=db,
-        obj_id=option_id,
+        entity_id=option_id,
     )
 
-    if option is None or option.variant_type_id != variant_type_id:
+    if option.variant_type_id != variant_type_id:
+        from fastapi import HTTPException
+
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Variant option not found.",
@@ -113,10 +103,12 @@ def update_variant_option(
 ):
     option = service.get_by_id(
         db=db,
-        obj_id=option_id,
+        entity_id=option_id,
     )
 
-    if option is None or option.variant_type_id != variant_type_id:
+    if option.variant_type_id != variant_type_id:
+        from fastapi import HTTPException
+
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Variant option not found.",
@@ -139,20 +131,8 @@ def delete_variant_option(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    option = service.get_by_id(
+    service.soft_delete(
         db=db,
-        obj_id=option_id,
+        variant_type_id=variant_type_id,
+        option_id=option_id,
     )
-
-    if option is None or option.variant_type_id != variant_type_id:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Variant option not found.",
-        )
-
-    service.repository.soft_delete(
-        db=db,
-        db_obj=option,
-    )
-
-    db.commit()

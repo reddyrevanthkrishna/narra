@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from slugify import slugify
 from sqlalchemy.orm import Session
 
@@ -55,6 +57,22 @@ class VariantTypeService(BaseService[VariantType]):
             db=db,
             entity=variant_type,
         )
+
+    def soft_delete(
+        self,
+        db: Session,
+        variant_type_id: UUID,
+    ) -> None:
+        variant_type = self.get_by_id(
+            db=db,
+            entity_id=variant_type_id,
+        )
+
+        self.repository.soft_delete(
+            variant_type,
+        )
+
+        self.commit(db)
 
     def get_by_name(
         self,

@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
@@ -42,7 +42,7 @@ def create_variant_type(
     response_model=list[VariantTypeResponse],
 )
 def list_variant_types(
-    db: Session =Depends(get_db),
+    db: Session = Depends(get_db),
 ):
     return service.repository.get_all(db)
 
@@ -55,18 +55,10 @@ def get_variant_type(
     variant_type_id: UUID,
     db: Session = Depends(get_db),
 ):
-    variant_type = service.get_by_id(
+    return service.get_by_id(
         db=db,
-        obj_id=variant_type_id,
+        entity_id=variant_type_id,
     )
-
-    if variant_type is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Variant type not found.",
-        )
-
-    return variant_type
 
 
 @router.put(
@@ -81,14 +73,8 @@ def update_variant_type(
 ):
     variant_type = service.get_by_id(
         db=db,
-        obj_id=variant_type_id,
+        entity_id=variant_type_id,
     )
-
-    if variant_type is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Variant type not found.",
-        )
 
     return service.update(
         db=db,
@@ -106,20 +92,7 @@ def delete_variant_type(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    variant_type = service.get_by_id(
+    service.soft_delete(
         db=db,
-        obj_id=variant_type_id,
+        variant_type_id=variant_type_id,
     )
-
-    if variant_type is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Variant type not found.",
-        )
-
-    service.repository.soft_delete(
-        db=db,
-        db_obj=variant_type,
-    )
-
-    db.commit()

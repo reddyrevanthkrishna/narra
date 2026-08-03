@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
@@ -51,18 +51,10 @@ def get_brand(
     brand_id: UUID,
     db: Session = Depends(get_db),
 ):
-    brand = service.get_by_id(
+    return service.get_by_id(
         db=db,
-        obj_id=brand_id,
+        entity_id=brand_id,
     )
-
-    if brand is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Brand not found.",
-        )
-
-    return brand
 
 
 @router.put(
@@ -77,14 +69,8 @@ def update_brand(
 ):
     brand = service.get_by_id(
         db=db,
-        obj_id=brand_id,
+        entity_id=brand_id,
     )
-
-    if brand is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Brand not found.",
-        )
 
     return service.update(
         db=db,
@@ -102,20 +88,7 @@ def delete_brand(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    brand = service.get_by_id(
+    service.soft_delete(
         db=db,
-        obj_id=brand_id,
+        brand_id=brand_id,
     )
-
-    if brand is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Brand not found.",
-        )
-
-    service.repository.soft_delete(
-        db=db,
-        db_obj=brand,
-    )
-
-    db.commit()

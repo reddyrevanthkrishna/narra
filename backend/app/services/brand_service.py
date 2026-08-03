@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from slugify import slugify
 from sqlalchemy.orm import Session
 
@@ -56,6 +58,22 @@ class BrandService(BaseService[Brand]):
             db=db,
             entity=brand,
         )
+
+    def soft_delete(
+        self,
+        db: Session,
+        brand_id: UUID,
+    ) -> None:
+        brand = self.get_by_id(
+            db=db,
+            entity_id=brand_id,
+        )
+
+        self.repository.soft_delete(
+            brand,
+        )
+
+        self.commit(db)
 
     def get_by_slug(
         self,

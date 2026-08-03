@@ -55,6 +55,31 @@ class VariantOptionService(BaseService[VariantOption]):
             entity=variant_option,
         )
 
+    def soft_delete(
+        self,
+        db: Session,
+        variant_type_id: UUID,
+        option_id: UUID,
+    ) -> None:
+        option = self.get_by_id(
+            db=db,
+            entity_id=option_id,
+        )
+
+        if option.variant_type_id != variant_type_id:
+            from fastapi import HTTPException, status
+
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Variant option not found.",
+            )
+
+        self.repository.soft_delete(
+            option,
+        )
+
+        self.commit(db)
+
     def get_by_code(
         self,
         db: Session,

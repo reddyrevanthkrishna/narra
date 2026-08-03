@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from slugify import slugify
 from sqlalchemy.orm import Session
 
@@ -56,3 +58,19 @@ class ProductService(BaseService[Product]):
             db=db,
             entity=product,
         )
+
+    def soft_delete(
+        self,
+        db: Session,
+        product_id: UUID,
+    ) -> None:
+        product = self.get_by_id(
+            db=db,
+            entity_id=product_id,
+        )
+
+        self.repository.soft_delete(
+            product,
+        )
+
+        self.commit(db)
